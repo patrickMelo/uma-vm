@@ -1,3 +1,4 @@
+#include "Kernel.hxx"
 #include "Program.hxx"
 #include "Runtime.hxx"
 
@@ -5,7 +6,7 @@
 
 using namespace UmaVM;
 
-int main( int numberOfArguments, char** argumentsValues ) {
+int main(int numberOfArguments, char** argumentsValues) {
     Program* program = new Program();
     program->Emit(1, 3, 4, 0);
     program->Emit(2, 2, 4, 0);

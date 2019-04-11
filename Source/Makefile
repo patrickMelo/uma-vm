@@ -6,7 +6,7 @@ BINARY_PATH			= $(shell dirname $(SOURCE_DIRECTORY))/Binaries/UmaVM
 CXX					= clang++
 CXX_FLAGS			= -std=c++0x -fno-rtti -fno-exceptions -Wno-sign-compare -Wno-format-security -Wno-narrowing -D_FILE_OFFSET_BITS=64 -fPIC
 RELEASE_FLAGS		= -O3
-DEBUG_FLAGS			= -g3 -DCELI_DEBUG=1
+DEBUG_FLAGS			= -g3 -DUMAVM_DEBUG=1
 INCLUDES			= -I$(SOURCE_DIRECTORY)/
 LIBS				=
 STRIP				= @true
@@ -14,7 +14,8 @@ STRIP_EXE			= strip
 
 # Common Objects
 
-OBJECTS	=	$(SOURCE_DIRECTORY)/Main.o \
+OBJECTS	=	$(SOURCE_DIRECTORY)/Kernel.o \
+			$(SOURCE_DIRECTORY)/Main.o \
 			$(SOURCE_DIRECTORY)/Program.o \
 			$(SOURCE_DIRECTORY)/Runtime.o
 
