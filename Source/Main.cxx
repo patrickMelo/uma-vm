@@ -7,6 +7,8 @@
 using namespace UmaVM;
 
 int main(int numberOfArguments, char** argumentsValues) {
+    Kernel.Boot(numberOfArguments, argumentsValues);
+
     Program* program = new Program();
     program->Emit(1, 3, 4, 0);
     program->Emit(2, 2, 4, 0);
@@ -17,5 +19,7 @@ int main(int numberOfArguments, char** argumentsValues) {
 
     Runtime* runtime = new Runtime();
     runtime->Run(program);
+
+    Kernel.Shutdown();
     return 0;
 }
