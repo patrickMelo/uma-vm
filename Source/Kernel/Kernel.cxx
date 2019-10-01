@@ -1,11 +1,11 @@
 /*
- * Source/Kernel.cxx
+ * Source/Kernel/Kernel.cxx
  *
  * This file is part of the UmaVM source code.
  * Copyright 2019 Patrick L. Melo <patrick@patrickmelo.com.br>
  */
 
-#include "Kernel.hxx"
+#include "Kernel/Kernel.hxx"
 
 namespace UmaVM {
 

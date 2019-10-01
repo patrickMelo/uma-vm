@@ -1,6 +1,5 @@
-#include "Kernel.hxx"
-#include "Program.hxx"
-#include "Runtime.hxx"
+#include "Kernel/Kernel.hxx"
+#include "Runtime/Runtime.hxx"
 
 #include <cstdio>
 

@@ -1,3 +1,10 @@
+/*
+ * Source/Runtime/Program.hxx
+ *
+ * This file is part of the UmaVM source code.
+ * Copyright 2019 Patrick L. Melo <patrick@patrickmelo.com.br>
+ */
+
 #ifndef UMAVM_PROGRAM_HXX
 #define UMAVM_PROGRAM_HXX
 

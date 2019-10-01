@@ -14,10 +14,10 @@ STRIP_EXE			= strip
 
 # Common Objects
 
-OBJECTS	=	$(SOURCE_DIRECTORY)/Kernel.o \
-			$(SOURCE_DIRECTORY)/Main.o \
-			$(SOURCE_DIRECTORY)/Program.o \
-			$(SOURCE_DIRECTORY)/Runtime.o
+OBJECTS	=	$(SOURCE_DIRECTORY)/Kernel/Kernel.o \
+			$(SOURCE_DIRECTORY)/Runtime/Program.o \
+			$(SOURCE_DIRECTORY)/Runtime/Runtime.o \
+			$(SOURCE_DIRECTORY)/Main.o			
 
 # Linux Variables
 
