@@ -2,32 +2,36 @@
  * Source/Kernel/Kernel.cxx
  *
  * This file is part of the UmaVM source code.
- * Copyright 2019 Patrick L. Melo <patrick@patrickmelo.com.br>
+ * Copyright 2019-2020 Patrick L. Melo <patrick@patrickmelo.com.br>
  */
 
 #include "Kernel/Kernel.hxx"
 
 namespace UmaVM {
 
-// Global Objects
-
-KernelClass Kernel;
-
 // String Table
 
 namespace Txt {
-	static const charconst LittleEndian		= "Little Endian";
-	static const charconst BigEndian		= "Big Endian";
+    #ifdef LinuxOS
+        static constexpr charconst InfoMessageFormat	= "\033[1;32m[%s] %s\033[0m\n";
+        static constexpr charconst WarningMessageFormat	= "\033[1;33m[%s] %s\033[0m\n";
+        static constexpr charconst ErrorMessageFormat	= "\033[1;31m[%s] %s\033[0m\n";
+        static constexpr charconst DebugMessageFormat	= "\033[1;35m[%s] %s\033[0m\n";
+        static constexpr charconst StubMessageFormat	= "\033[1;36m[Stub] %s in %s @ %ld\033[0m\n";
+    #endif
 
-	static const charconst DevelopmentVersion = "--- DEVELOPMENT VERSION ---";
+    #ifdef WindowsOS
+        static constexpr charconst InfoMessageFormat	= "[%s] %s\n";
+        static constexpr charconst WarningMessageFormat	= "[%s] WARNING: %s\n";
+        static constexpr charconst ErrorMessageFormat	= "[%s] ERROR: %s\n";
+        static constexpr charconst DebugMessageFormat	= "[%s] DEBUG: %s\n";
+        static constexpr charconst StubMessageFormat	= "[Stub] %s in %s @ %ld\n";
+    #endif
 
-	static const charconst InfoMessageFormat	= "\033[1;32m[%s] %s\033[0m\n";
-	static const charconst WarningMessageFormat	= "\033[1;33m[%s] %s\033[0m\n";
-	static const charconst ErrorMessageFormat	= "\033[1;31m[%s] %s\033[0m\n";
-	static const charconst DebugMessageFormat	= "\033[1;35m[%s] %s\033[0m\n";
-	static const charconst StubMessageFormat	= "\033[1;36m[Stub] %s in %s @ %ld\033[0m\n";
-
-	static const charconst ProgramHeader		= "%s - Version %s (%s %s %s)";
+	static constexpr charconst LittleEndian			= "Little Endian";
+	static constexpr charconst BigEndian			= "Big Endian";
+	static constexpr charconst ProgramHeader		= "%s - Version %s (%s %s %s)";
+	static constexpr charconst DevelopmentVersion 	= "--- DEVELOPMENT VERSION ---";
 
 	static const charconst BootingUp			= "Booting up...";
 	static const charconst BootCompleted		= "Boot completed.";
@@ -35,24 +39,14 @@ namespace Txt {
 	static const charconst ShutdownCompleted	= "Shutting completed.";
 }
 
-// Kernel Class
-
-KernelClass::KernelClass(void) :
-	isRunning(false)
-{
-	// Empty
-}
-
-KernelClass::~KernelClass(void) {
-	this->Shutdown();
-}
+// Kernel
 
 // General
 
-bool KernelClass::Boot(const uint numberOfArguments, const cstring* argumentsValues) {
+bool Kernel::Boot(const uint numberOfArguments, const cstring* argumentsValues) {
 	static const charconst endianNames[2] = {Txt::LittleEndian, Txt::BigEndian};
 
-	if (this->isRunning) {
+	if (m_IsRunning) {
 		WARNING(Txt::AlreadyRunning);
 		return false;
 	}
@@ -60,56 +54,56 @@ bool KernelClass::Boot(const uint numberOfArguments, const cstring* argumentsVal
 	DEBUG(Txt::BootingUp);
 
 	INFO(Txt::Empty);
-	INFO(Txt::ProgramHeader, KernelClass::Name, KernelClass::VersionString, OSName, ArchName, endianNames[this->IsBigEndian()]);
-	INFO(KernelClass::CopyrightInfo);
+	INFO(Txt::ProgramHeader, Kernel::Name, Kernel::VersionString, OSName, ArchName, endianNames[IsBigEndian()]);
+	INFO(Kernel::CopyrightInfo);
 	DEBUG(Txt::DevelopmentVersion);
 	INFO(Txt::Empty);
 
 	DEBUG(Txt::BootCompleted);
 
-	return this->isRunning = true;
+	return m_IsRunning = true;
 }
 
-void KernelClass::Shutdown() {
-	if (!this->isRunning) {
+void Kernel::Shutdown() {
+	if (!m_IsRunning) {
 		return;
 	}
 
 	DEBUG(Txt::ShuttingDown);
 
-	this->isRunning = false;
+	m_IsRunning = false;
 	DEBUG(Txt::ShutdownCompleted);
 }
 
 // Log
 
-#define LOG_MACRO(messageFormat) \
+#define LOG(messageFormat) \
 	static char formattedMessage[8192]; \
 	va_list functionArguments; \
 	va_start(functionArguments, logMessage); \
 	vsprintf(formattedMessage, logMessage, functionArguments); \
 	va_end(functionArguments); \
-	printf(messageFormat, logTag, formattedMessage);
+    printf(messageFormat, logTag, formattedMessage)
 
-void KernelClass::Info(const charconst logTag, const charconst logMessage, ...) const {
-	LOG_MACRO(Txt::InfoMessageFormat);
+void Kernel::Info(const charconst logTag, const charconst logMessage, ...) {
+	LOG(Txt::InfoMessageFormat);
 }
 
-void KernelClass::Warning(const charconst logTag, const charconst logMessage, ...) const {
-	LOG_MACRO(Txt::WarningMessageFormat);
+void Kernel::Warning(const charconst logTag, const charconst logMessage, ...) {
+	LOG(Txt::WarningMessageFormat);
 }
 
-void KernelClass::Error(const charconst logTag, const charconst logMessage, ...) const {
-	LOG_MACRO(Txt::ErrorMessageFormat);
+void Kernel::Error(const charconst logTag, const charconst logMessage, ...) {
+	LOG(Txt::ErrorMessageFormat);
 }
 
-void KernelClass::Debug(const charconst logTag, const charconst logMessage, ...) const {
+void Kernel::Debug(const charconst logTag, const charconst logMessage, ...) {
 	#ifdef UMAVM_DEBUG
-		LOG_MACRO(Txt::DebugMessageFormat);
+		LOG(Txt::DebugMessageFormat);
 	#endif
 }
 
-void KernelClass::Stub(const charconst functionName, const charconst fileName, const u64 lineNumber) const {
+void Kernel::Stub(const charconst functionName, const charconst fileName, const u64 lineNumber) {
 	#ifdef UMAVM_DEBUG
 		printf(Txt::StubMessageFormat, functionName, fileName, lineNumber);
 	#endif
@@ -117,7 +111,7 @@ void KernelClass::Stub(const charconst functionName, const charconst fileName, c
 
 // Information
 
-bool KernelClass::IsBigEndian(void) const {
+bool Kernel::IsBigEndian() {
 	static const i16u endianWord = {{1}};
 	return endianWord.i8[1] == 1;
 }

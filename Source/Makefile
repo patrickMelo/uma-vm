@@ -2,22 +2,23 @@
 
 CURRENT_DIRECTORY	= $(shell pwd)
 SOURCE_DIRECTORY	= $(CURRENT_DIRECTORY)
-BINARY_PATH			= $(shell dirname $(SOURCE_DIRECTORY))/Binaries/UmaVM
+BINARY_DIRECTORY	= $(shell dirname $(SOURCE_DIRECTORY))/Binaries
+BINARY_PATH			= $(BINARY_DIRECTORY)/UmaVM
 CXX					= clang++
-CXX_FLAGS			= -std=c++0x -fno-rtti -fno-exceptions -Wno-sign-compare -Wno-format-security -Wno-narrowing -D_FILE_OFFSET_BITS=64 -fPIC
-RELEASE_FLAGS		= -O3
+CXX_FLAGS			= -O2 -std=gnu++17 -fno-rtti -fno-exceptions -Wno-sign-compare -Wno-format-security -Wno-narrowing -D_FILE_OFFSET_BITS=64
 DEBUG_FLAGS			= -g3 -DUMAVM_DEBUG=1
 INCLUDES			= -I$(SOURCE_DIRECTORY)/
 LIBS				=
 STRIP				= @true
 STRIP_EXE			= strip
+ARCH				= x64
 
 # Common Objects
 
 OBJECTS	=	$(SOURCE_DIRECTORY)/Kernel/Kernel.o \
 			$(SOURCE_DIRECTORY)/Runtime/Program.o \
 			$(SOURCE_DIRECTORY)/Runtime/Runtime.o \
-			$(SOURCE_DIRECTORY)/Main.o			
+			$(SOURCE_DIRECTORY)/Main.o
 
 # Linux Variables
 
@@ -29,13 +30,11 @@ LINUX_OBJECTS	=
 
 # Windows Variables
 
-WINDOWS_CXX_32		= i686-w64-mingw32-g++
-WINDOWS_CXX_64		= x86_64-w64-mingw32-g++
+WINDOWS_CXX			= x86_64-w64-mingw32-g++
 WINDOWS_CXX_FLAGS	= -static-libgcc -static-libstdc++
 WINDOWS_INCLUDES	=
-WINDOWS_LIBS		= -Wl,-Bstatic -lpthread
-WINDOWS_STRIP_32	= i686-w64-mingw32-strip
-WINDOWS_STRIP_64	= x86_64-w64-mingw32-strip
+WINDOWS_LIBS		= -lm
+WINDOWS_STRIP		= x86_64-w64-mingw32-strip
 WINDOWS_OBJECTS		=
 
 # "Final" Variables
@@ -46,16 +45,6 @@ endif
 
 ifndef TYPE
 	TYPE = debug
-endif
-
-ifndef BITS
-	BITS = 64
-endif
-
-ifeq ($(BITS), 32)
-	ARCH	= x86
-else
-	ARCH	= x86_64
 endif
 
 ifeq ($(TARGET), linux)
@@ -72,21 +61,13 @@ ifeq ($(TARGET), windows)
 	INCLUDES	+= $(WINDOWS_INCLUDES)
 	LIBS		+= $(WINDOWS_LIBS)
 	OBJECTS		+= $(WINDOWS_OBJECTS)
-
-	ifeq ($(BITS), 32)
-		CXX			= $(WINDOWS_CXX_32)
-		STRIP_EXE	= $(WINDOWS_STRIP_32)
-	else
-		CXX			= $(WINDOWS_CXX_64)
-		STRIP_EXE	= $(WINDOWS_STRIP_64)
-	endif
+	CXX			= $(WINDOWS_CXX)
+	STRIP_EXE	= $(WINDOWS_STRIP)
 endif
 
 ifeq ($(TYPE), debug)
 	CXX_FLAGS	+= $(DEBUG_FLAGS)
 	ARCH		:= debug.$(ARCH)
-else
-	CXX_FLAGS	+= $(RELEASE_FLAGS)
 endif
 
 ifeq ($(TYPE), release)
@@ -99,6 +80,7 @@ endif
 	$(CXX) $(CXX_FLAGS) $(INCLUDES) -c $< -o $@
 
 all: $(OBJECTS)
+	mkdir -p $(BINARY_DIRECTORY)
 	$(CXX) $(CXX_FLAGS) $(INCLUDES) $(OBJECTS) $(LIBS) -o $(BINARY_PATH).$(ARCH)
 	$(STRIP) $(BINARY_PATH).$(ARCH)
 
@@ -107,10 +89,10 @@ clean:
 
 help:
 	@echo ""
-	@echo "Usage: make TARGET=<target name> TYPE=<debug|release> BITS=<32|64>"
+	@echo "Usage: make TARGET=<target name> TYPE=<debug|release>"
 	@echo ""
 	@echo "Available targets:"
 	@echo " - linux"
 	@echo " - windows"
 	@echo ""
-	@echo "Defaults to: linux, debug, 64"
+	@echo "Defaults to: linux, debug"

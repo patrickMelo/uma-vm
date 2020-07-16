@@ -2,33 +2,33 @@
  * Source/Runtime/Program.hxx
  *
  * This file is part of the UmaVM source code.
- * Copyright 2019 Patrick L. Melo <patrick@patrickmelo.com.br>
+ * Copyright 2019-2020 Patrick L. Melo <patrick@patrickmelo.com.br>
  */
 
-#ifndef UMAVM_PROGRAM_HXX
-#define UMAVM_PROGRAM_HXX
+#ifndef UMAVM_RUNTIME_PROGRAM_HXX
+#define UMAVM_RUNTIME_PROGRAM_HXX
 
-#include <vector>
+#include "Kernel/Types.hxx"
 
 namespace UmaVM {
 
 struct Instruction {
-    int opCode;
-    int param1;
-    int param2;
-    int param3;
+    i64 opCode;
+    i64 param1;
+    i64 param2;
+    i64 param3;
 };
 
 class Program {
     public:
-        void Emit(int opCode, int param1, int param2, int param3);
+        void Emit(const i64 opCode, const i64 param1, const i64 param2, const i64 param3);
         int GetInstructionsCount() const;
-        Instruction GetInstruction(int instructionIndex) const;
+        Instruction GetInstruction(i64 instructionIndex) const;
 
     private:
-        std::vector<Instruction> instructions;
+        std::vector<Instruction> m_Instructions;
 };
 
 } // namespace UmaVM
 
-#endif // UMAVM_PROGRAM_HXX
+#endif // UMAVM_RUNTIME_PROGRAM_HXX

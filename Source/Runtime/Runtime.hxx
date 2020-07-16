@@ -2,7 +2,7 @@
  * Source/Runtime/Runtime.hxx
  *
  * This file is part of the UmaVM source code.
- * Copyright 2019 Patrick L. Melo <patrick@patrickmelo.com.br>
+ * Copyright 2019-2020 Patrick L. Melo <patrick@patrickmelo.com.br>
  */
 
 #ifndef UMAVM_RUNTIME_HXX
@@ -14,10 +14,10 @@ namespace UmaVM {
 
 class Runtime {
     public:
-        void Run(Program* program);
+        void Run(const Program& program);
 
     private:
-        bool Execute(Instruction instruction);
+        bool Execute(const Instruction& instruction);
 };
 
 } // namespace UmaVM
