@@ -12,20 +12,27 @@
 
 namespace UmaVM {
 
+// Instruction
+
 struct Instruction {
-    i64 opCode;
-    i64 param1;
-    i64 param2;
-    i64 param3;
+    u64 OpCode;
+    u64 Params[4];
 };
+
+// Program
 
 class Program {
     public:
-        void Emit(const i64 opCode, const i64 param1, const i64 param2, const i64 param3);
-        int GetInstructionsCount() const;
-        Instruction GetInstruction(i64 instructionIndex) const;
+        Program() = default;
+        virtual ~Program() = default;
+
+        // Instructions
+        void Emit(const Instruction instruction);
+        int GetNumberOfInstructions() const;
+        Instruction* GetInstruction(const i64 instructionIndex);
 
     private:
+        // Instructions
         std::vector<Instruction> m_Instructions;
 };
 

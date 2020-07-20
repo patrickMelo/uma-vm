@@ -9,22 +9,20 @@
 
 namespace UmaVM {
 
-void Program::Emit(const i64 opCode, const i64 param1, const i64 param2, const i64 param3) {
-    m_Instructions.push_back({opCode, param1, param2, param3});
+void Program::Emit(const Instruction instruction) {
+    m_Instructions.push_back(instruction);
 }
 
-int Program::GetInstructionsCount() const {
+int Program::GetNumberOfInstructions() const {
     return m_Instructions.size();
 }
 
-Instruction Program::GetInstruction(i64 instructionIndex) const {
-    static Instruction emptyInstruction = {};
-
+Instruction* Program::GetInstruction(const i64 instructionIndex) {
     if ((instructionIndex < 0) && (instructionIndex >= m_Instructions.size())) {
-        return emptyInstruction;
+        return NULL;
     }
 
-    return m_Instructions[instructionIndex];
+    return &m_Instructions[instructionIndex];
 }
 
 } // namespace UmaVM

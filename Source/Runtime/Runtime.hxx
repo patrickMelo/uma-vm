@@ -8,16 +8,32 @@
 #ifndef UMAVM_RUNTIME_HXX
 #define UMAVM_RUNTIME_HXX
 
+#include "Runtime/Library.hxx"
 #include "Runtime/Program.hxx"
 
 namespace UmaVM {
 
+// Runtime
+
 class Runtime {
     public:
-        void Run(const Program& program);
+        Runtime() = default;
+        virtual ~Runtime() = default;
+
+        // Constants
+        static constexpr charconst Tag = "Runtime";
+
+        // General
+        bool Initialize(Library& library);
+
+        // Execution
+        void Run(Program& program);
+        i64 Execute(Instruction& instruction);
 
     private:
-        bool Execute(const Instruction& instruction);
+        // General
+        abool m_IsInitialized   = false;
+        Library* m_Library      = NULL;
 };
 
 } // namespace UmaVM

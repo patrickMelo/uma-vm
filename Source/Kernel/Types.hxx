@@ -145,8 +145,9 @@ using string    = std::string;
 
 // Pointer Types
 
-using data      = u8*;
-using pointer   = void*;
+using data      	= u8*;
+using pointer   	= void*;
+using intpointer	= intptr_t;
 
 // Atomic Types
 

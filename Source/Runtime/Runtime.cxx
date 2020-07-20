@@ -6,47 +6,53 @@
  */
 
 #include "Runtime/Runtime.hxx"
+#include "Kernel/Kernel.hxx"
 
 namespace UmaVM {
 
-void Runtime::Run(const Program& program) {
-    int instructionIndex = 0;
-    int instructionCount = program.GetInstructionsCount();
+// String Table
 
-    while (instructionIndex < instructionCount) {
-        if (!this->Execute(program.GetInstruction(instructionIndex))) {
+namespace Txt {
+    static constexpr charconst InvalidInstructionAddress = "Invalid instruction address: $%08x";
+}
+
+// General
+
+bool Runtime::Initialize(Library& library) {
+    if (m_IsInitialized) {
+        WARNING(Txt::AlreadyInitialized);
+        return false;
+    }
+
+    DEBUG(Txt::Initializing);
+    m_Library = &library;
+    INFO(Txt::Initialized);
+
+    return this->m_IsInitialized = true;
+}
+
+// Execution
+
+void Runtime::Run(Program& program) {
+    i64 instructionAddress = 0;
+    i64 maxInstructionAddress = program.GetNumberOfInstructions();
+    i64 nextInstructionOffset = Operation::Continue;
+
+    while (nextInstructionOffset != Operation::Halt) {
+        auto currentInstruction = program.GetInstruction(instructionAddress);
+
+        if (currentInstruction == NULL) {
+            ERROR(Txt::InvalidInstructionAddress, instructionAddress);
             break;
         }
 
-        instructionIndex++;
+        nextInstructionOffset = this->Execute(*currentInstruction);
+        instructionAddress += nextInstructionOffset;
     }
 }
 
-bool Runtime::Execute(const Instruction& instruction) {
-    switch (instruction.opCode) {
-        case 1: // Add
-            printf("%ld + %ld = %ld\n", instruction.param1, instruction.param2, instruction.param1 + instruction.param2);
-            break;
-
-        case 2: // Sub
-            printf("%ld - %ld = %ld\n", instruction.param1, instruction.param2, instruction.param1 - instruction.param2);
-            break;
-
-        case 3: // Mult
-            printf("%ld * %ld = %ld\n", instruction.param1, instruction.param2, instruction.param1 * instruction.param2);
-            break;
-
-        case 4: // Div
-            printf("%ld / %ld = %ld\n", instruction.param1, instruction.param2, instruction.param1 / instruction.param2);
-            break;
-
-        default:
-            printf("Invalid operation code: %ld\n", instruction.opCode);
-            return false;
-            break;
-    }
-
-    return true;
+i64 Runtime::Execute(Instruction& instruction) {
+    return m_Library->Call(instruction);
 }
 
 } // namespace UmaVM

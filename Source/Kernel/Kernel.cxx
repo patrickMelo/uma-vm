@@ -28,15 +28,13 @@ namespace Txt {
         static constexpr charconst StubMessageFormat	= "[Stub] %s in %s @ %ld\n";
     #endif
 
-	static constexpr charconst LittleEndian			= "Little Endian";
-	static constexpr charconst BigEndian			= "Big Endian";
-	static constexpr charconst ProgramHeader		= "%s - Version %s (%s %s %s)";
+	static constexpr charconst ProgramHeader		= "%s - Version %s (%s %s)";
 	static constexpr charconst DevelopmentVersion 	= "--- DEVELOPMENT VERSION ---";
 
-	static const charconst BootingUp			= "Booting up...";
-	static const charconst BootCompleted		= "Boot completed.";
-	static const charconst ShuttingDown			= "Shutting down...";
-	static const charconst ShutdownCompleted	= "Shutting completed.";
+	static const charconst BootingUp			= "Booting up";
+	static const charconst BootCompleted		= "Boot completed";
+	static const charconst ShuttingDown			= "Shutting down";
+	static const charconst ShutdownCompleted	= "Shutdown completed";
 }
 
 // Kernel
@@ -44,8 +42,6 @@ namespace Txt {
 // General
 
 bool Kernel::Boot(const uint numberOfArguments, const cstring* argumentsValues) {
-	static const charconst endianNames[2] = {Txt::LittleEndian, Txt::BigEndian};
-
 	if (m_IsRunning) {
 		WARNING(Txt::AlreadyRunning);
 		return false;
@@ -54,13 +50,12 @@ bool Kernel::Boot(const uint numberOfArguments, const cstring* argumentsValues) 
 	DEBUG(Txt::BootingUp);
 
 	INFO(Txt::Empty);
-	INFO(Txt::ProgramHeader, Kernel::Name, Kernel::VersionString, OSName, ArchName, endianNames[IsBigEndian()]);
+	INFO(Txt::ProgramHeader, Kernel::Name, Kernel::VersionString, OSName, ArchName);
 	INFO(Kernel::CopyrightInfo);
 	DEBUG(Txt::DevelopmentVersion);
 	INFO(Txt::Empty);
 
 	DEBUG(Txt::BootCompleted);
-
 	return m_IsRunning = true;
 }
 
@@ -107,13 +102,6 @@ void Kernel::Stub(const charconst functionName, const charconst fileName, const 
 	#ifdef UMAVM_DEBUG
 		printf(Txt::StubMessageFormat, functionName, fileName, lineNumber);
 	#endif
-}
-
-// Information
-
-bool Kernel::IsBigEndian() {
-	static const i16u endianWord = {{1}};
-	return endianWord.i8[1] == 1;
 }
 
 } // namespace UmaVM

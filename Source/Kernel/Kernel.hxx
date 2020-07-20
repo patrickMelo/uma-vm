@@ -37,14 +37,6 @@ namespace Txt {
 	static constexpr charconst Running  			= "Running";
 	static constexpr charconst AlreadyRunning		= "Already running";
 	static constexpr charconst NotRunning  			= "Not running";
-
-	static constexpr charconst Stopping				= "Stopping";
-	static constexpr charconst Stopped				= "Stopped";
-
-	static constexpr charconst Activated        	= "Activated";
-	static constexpr charconst Deactivated        	= "Deactivated";
-	static constexpr charconst AlreadyActive        = "Already active";
-	static constexpr charconst NotActive        	= "Not active";
 } // namespace Txt
 
 // Kernel
@@ -71,9 +63,6 @@ class Kernel {
 		static void Error(const charconst logTag, const charconst logMessage, ...);
 		static void Debug(const charconst logTag, const charconst logMessage, ...);
 		static void Stub(const charconst functionName, const charconst fileName, const u64 lineNumber);
-
-		// Information
-		static bool IsBigEndian();
 
     protected:
         Kernel() = delete;
