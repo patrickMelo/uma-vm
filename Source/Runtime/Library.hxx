@@ -8,7 +8,7 @@
 #ifndef UMAVM_RUNTIME_LIBRARY_HXX
 #define UMAVM_RUNTIME_LIBRARY_HXX
 
-#include "Kernel/Types.hxx"
+#include "Kernel/Kernel.hxx"
 #include "Runtime/Program.hxx"
 #include "Runtime/Operation.hxx"
 

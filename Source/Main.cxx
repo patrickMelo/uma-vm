@@ -18,8 +18,11 @@ int main(int numberOfArguments, char** argumentsValues) {
     StandardLibrary library;
     library.Initialize();
 
+    Debugger debugger;
+    debugger.Initialize(library);
+
     Runtime runtime;
-    runtime.Initialize(library);
+    runtime.Initialize(library, debugger);
     runtime.Run(program);
 
     Kernel::Shutdown();

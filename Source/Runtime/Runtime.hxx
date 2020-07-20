@@ -10,6 +10,7 @@
 
 #include "Runtime/Library.hxx"
 #include "Runtime/Program.hxx"
+#include "Runtime/Debugger.hxx"
 
 namespace UmaVM {
 
@@ -24,7 +25,7 @@ class Runtime {
         static constexpr charconst Tag = "Runtime";
 
         // General
-        bool Initialize(Library& library);
+        bool Initialize(Library& library, Debugger& debugger);
 
         // Execution
         void Run(Program& program);
@@ -34,6 +35,7 @@ class Runtime {
         // General
         abool m_IsInitialized   = false;
         Library* m_Library      = NULL;
+        Debugger* m_Debugger    = NULL;
 };
 
 } // namespace UmaVM

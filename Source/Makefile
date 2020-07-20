@@ -16,6 +16,7 @@ ARCH				= x64
 # Common Objects
 
 OBJECTS	=	$(SOURCE_DIRECTORY)/Kernel/Kernel.o \
+			$(SOURCE_DIRECTORY)/Runtime/Debugger.o \
 			$(SOURCE_DIRECTORY)/Runtime/Library.o \
 			$(SOURCE_DIRECTORY)/Runtime/Program.o \
 			$(SOURCE_DIRECTORY)/Runtime/Runtime.o \

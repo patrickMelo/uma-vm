@@ -6,7 +6,6 @@
  */
 
 #include "Runtime/Runtime.hxx"
-#include "Kernel/Kernel.hxx"
 
 namespace UmaVM {
 
@@ -18,14 +17,17 @@ namespace Txt {
 
 // General
 
-bool Runtime::Initialize(Library& library) {
+bool Runtime::Initialize(Library& library, Debugger& debugger) {
     if (m_IsInitialized) {
         WARNING(Txt::AlreadyInitialized);
         return false;
     }
 
     DEBUG(Txt::Initializing);
+
     m_Library = &library;
+    m_Debugger = &debugger;
+
     INFO(Txt::Initialized);
 
     return this->m_IsInitialized = true;
@@ -45,6 +47,8 @@ void Runtime::Run(Program& program) {
             ERROR(Txt::InvalidInstructionAddress, instructionAddress);
             break;
         }
+
+        m_Debugger->Debug(instructionAddress, *currentInstruction);
 
         nextInstructionOffset = this->Execute(*currentInstruction);
         instructionAddress += nextInstructionOffset;

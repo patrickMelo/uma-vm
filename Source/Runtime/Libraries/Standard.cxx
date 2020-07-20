@@ -6,7 +6,6 @@
  */
 
 #include "Runtime/Libraries/Standard.hxx"
-#include "Kernel/Kernel.hxx"
 
 namespace UmaVM {
 

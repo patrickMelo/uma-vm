@@ -8,7 +8,7 @@
 #ifndef UMAVM_RUNTIME_PROGRAM_HXX
 #define UMAVM_RUNTIME_PROGRAM_HXX
 
-#include "Kernel/Types.hxx"
+#include "Kernel/Kernel.hxx"
 
 namespace UmaVM {
 
